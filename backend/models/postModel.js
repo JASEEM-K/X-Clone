@@ -1,47 +1,5 @@
 import mongoose from 'mongoose'
 
-const commentSchema = new mongoose.Schema({
-    text: {
-        type: String,
-        required: true,
-    },
-    likes: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
-            required: true,
-        }
-    ],
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
-        required: true,
-    },
-    replies: [
-        {
-            text: {
-                type: String,
-                required: true,
-            },
-            likes: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "user",
-                    required: true,
-                }
-            ],
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "user",
-                required: true,
-            },
-        }
-    ],
-
-}, { timestamps: true })
-
-const Comment = mongoose.model("Comment", commentSchema)
-
 const postSchema = new mongoose.Schema({
     text: {
         type: String,
@@ -71,4 +29,4 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model("Post", postSchema)
 
-export default { Post, Comment }
+export default  Post
