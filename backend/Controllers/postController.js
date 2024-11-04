@@ -81,3 +81,27 @@ export const savePost = async (req, res) => {
        return res.status(500).json({ error: "Internal Server Error" }) 
     }
 }
+
+export const commentOnPost = async (req, res) => {
+    try {
+        const { text } = req.body
+        const { id:postId } = req.params
+        const post = await Post.findById(postId)
+        if(!post){
+            return res.status(404).json({error: "Post Not Found"})
+        }
+        if(!text){
+            return res.status(400).json({error: "Please Provide Text"})
+        }
+        const newComment = new Post({
+            text,
+            user: req.user._id,
+        })
+        await newComment.save()
+        await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
+        return res.status(200).json(newComment)
+    } catch (error) {
+       console.log("Error in Commenting On Post:", error)
+       return res.status(500).json({ error: "Internal Server Error" }) 
+    }
+}

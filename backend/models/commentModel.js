@@ -9,7 +9,6 @@ const commentSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
-            required: true,
         }
     ],
     user: {
@@ -27,13 +26,16 @@ const commentSchema = new mongoose.Schema({
                 {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "user",
-                    required: true,
                 }
             ],
             user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "user",
                 required: true,
+            },
+            time: {
+                type: Date,
+                default: Date.now(),
             },
         }
     ],
