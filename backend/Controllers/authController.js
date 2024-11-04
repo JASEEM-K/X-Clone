@@ -17,6 +17,11 @@ export const signupUser = async (req, res) => {
                 error: "Invalid Username Format"
             })
         }
+        if(!username){
+            return res.status(400).json({
+                error: "Please Provide an Full Name as well "
+            })
+        }
         const existingUserName = await User.findOne({ username })
         if (existingUserName) {
             return res.status(400).json({
