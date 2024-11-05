@@ -8,37 +8,23 @@ const commentSchema = new mongoose.Schema({
     likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
+            ref: "User",
         }
     ],
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
         required: true,
     },
-    replies: [
-        {
-            text: {
-                type: String,
-                required: true,
-            },
-            likes: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "user",
-                }
-            ],
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "user",
-                required: true,
-            },
-            time: {
-                type: Date,
-                default: Date.now(),
-            },
-        }
-    ],
+    replyTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null,
+    },
+    replies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+    }],
 
 }, { timestamps: true })
 

@@ -5,6 +5,7 @@ import {v2 as cloudinary} from 'cloudinary'
 
 import authRoute from './Routes/authRoute.js'
 import userRoute from './Routes/userRoute.js'
+import postRoute from './Routes/postRoute.js'
 
 import {connectDb} from './db/connectDb.js'
 
@@ -24,6 +25,7 @@ app.use(cookieParser())
 
 app.use("/api/auth",authRoute)
 app.use("/api/user",userRoute)
+app.use("/api/posts",postRoute)
 
 app.listen(PORT,() => {
     connectDb()
