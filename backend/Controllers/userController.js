@@ -243,7 +243,7 @@ export const suggestedUsers = async (req, res) => {
 
         }
 
-        // This was overCombicated for what its worth literally spend like 4h on this and i hate the code.
+        // This was overComblicated for what its worth literally spend like 4h on this and i hate the code.
         const sugUser = potUser.slice(0, 4)
         const suggestedUsers = await User.find({ _id: {$in:sugUser}}).select("-password")
 
