@@ -33,7 +33,7 @@ function App() {
   }
 
   return (
-    <div className="flex max-w-6xl mx-auto">
+    <div className="flex max-w-7xl mx-auto">
       {authUser && <Sidebar />}
       <Routes >
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
