@@ -1,15 +1,9 @@
 import { Link } from "react-router-dom";
 import RightPanelSkeleton from "../Skeleton/RightPanelSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import useFollow from "../../hooks/useFollow";
-import { useState } from "react";
+import FollowButton from "./FollowButton";
 
 const RightPanel = () => {
-    const { data:authUser } = useQuery({queryKey: ["authUser"]})
-    const isAlreadyFollowing = (userId) =>{
-        return authUser.following.includes(userId)? true : false
-    }
-    const [ loadinUser, setLoadingUser ] = useState()
     const { data:suggestedUsers , isLoading } = useQuery({
         queryKey: ['suggestedUsers'], 
         queryFn: async () => {
@@ -24,8 +18,6 @@ const RightPanel = () => {
             }
         },
     })
-
-    const { followUser, isPending } = useFollow()
 
     if(suggestedUsers?.length === 0) return(<div className="md:w-64 w-0"></div>)
 
@@ -64,22 +56,7 @@ const RightPanel = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <button
-                                        className={loadinUser === user._id && isAlreadyFollowing(user._id)?
-                                            'btn border-white bg-black text-white hover:bg-red-950 hover:text-red-500 hover:border-red-500 hover:opacity-90 rounded-full btn-sm':
-                                            'btn bg-white text-black hover:bg-white hover:opacity-90 rounded-full btn-sm'}
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            followUser(user._id)
-                                            setLoadingUser(user._id)
-                                        }}
-                                    >
-                                        {loadinUser === user._id && isPending ? "Loading..." :
-                                        isAlreadyFollowing(user._id)?
-                                            "Unfollow":
-                                            "Follow" 
-                                        }
-									</button>
+                                    <FollowButton userId={user._id} />
 								</div>
 							</Link>
 						))}
