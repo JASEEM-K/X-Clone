@@ -7,6 +7,7 @@ import HomePage from "./pages/home/HomePage"
 import Sidebar from "./components/common/Sidebar"
 import RightPanel from "./components/common/RightPanel"
 import NotificationPage from "./pages/notification/NotificationPage"
+import ProfilePage from "./pages/Profile/ProfilePage"
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -41,7 +42,7 @@ function App() {
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/notifications" element={authUser ? <NotificationPage /> : <Navigate to="/login" />} />
-        <Route path="/profile/:username" element={authUser ? <LoginPage /> : <Navigate to="/login" />} />
+        <Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
       {authUser && <RightPanel />}
       <Toaster />
