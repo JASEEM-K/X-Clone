@@ -19,10 +19,7 @@ const Post = ({ post }) => {
 
 	const isLiked = post.likes.includes(authUser._id);
 
-
 	const formattedDate = "1h";
-
-	const isCommenting = false;
 
 	const handleDeletePost = (e) => {
 		e.preventDefault();
@@ -31,6 +28,7 @@ const Post = ({ post }) => {
 
 	const handlePostComment = (e) => {
 		e.preventDefault();
+		commentPost({postId:post._id, comment});
 	};
 
 	const handleLikePost = (e) => {
@@ -110,11 +108,37 @@ const Post = ({ post }) => {
 			}
 		}
 	})
+
+	const { mutate:commentPost ,isPending:isCommenting } = useMutation({
+		mutationFn: async({postId, comment}) => {
+			try {
+				const res = await fetch(`/api/posts/comment/${postId}`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ text: comment })
+				})
+				const data = await res.json()
+				if(!res.ok) throw new Error(data.error || "Something went wrong")
+				return data
+			} catch (error) {
+				console.error("Error in Commenting on Post:", error)
+				throw error
+			}
+		},
+		onSuccess: () => {
+			toast.success("Commented Successfully")
+			queryClient.invalidateQueries({queryKey: ['fullPost', post._id]})
+		},
+		onError: (error) => {
+			toast.error(error.message)
+		}
+	})
+
 	if (isGettingPost) {
 		return <PostSkeleton />
 	}
-
-
 	return (
 		<>
 			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
