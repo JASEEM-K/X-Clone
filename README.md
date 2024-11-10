@@ -1,6 +1,6 @@
 # X Clone
 
-X Clone is a social media web application inspired by [X]. This project replicates key features of the original platform, enabling users to connect, share updates, and interact with others in a familiar social media interface.
+X Clone is a social media web application inspired by [X](https://x.com). This project replicates key features of the original platform, enabling users to connect, share updates, and interact with others in a familiar social media interface.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ X Clone is a social media web application inspired by [X]. This project replicat
 
 ## Tech Stack
 
-- **Frontend**: React, HTML, TailwindCSS ,daisy ui
+- **Frontend**: React, HTML, TailwindCSS ,DaisyUI
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Authentication**: JWT (JSON Web Tokens)
