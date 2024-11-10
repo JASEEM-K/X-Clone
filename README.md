@@ -9,7 +9,7 @@ X Clone is a social media web application inspired by [X]. This project replicat
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API Endpoints](#api-endpoints)
+- [API Endpoints](#some-api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -69,7 +69,8 @@ To get a local copy of this project up and running, follow these steps.
    CLOUDINARY_NAME=your_cloudinary_cloud_name
 
 The app should now be running locally. Open your browser and go to http://localhost:5000.
-Usage
+
+## Usage
 
     Sign Up: Register a new account to start using the app.
     Log In: Access your account with your credentials.
@@ -77,7 +78,7 @@ Usage
     Create Posts: Share text or media content to your followers.
     Engage: Like and comment on posts to interact with others.
 
-Some API Endpoints
+## Some API Endpoints
 
     User Authentication:
         POST /api/auth/register: Register a new user
