@@ -10,7 +10,7 @@ const RightPanel = () => {
         return authUser.following.includes(userId)? true : false
     }
     const [ loadinUser, setLoadingUser ] = useState()
-    const { data:suggestedUsers , isLoading} = useQuery({
+    const { data:suggestedUsers , isLoading } = useQuery({
         queryKey: ['suggestedUsers'], 
         queryFn: async () => {
             try {
@@ -22,7 +22,7 @@ const RightPanel = () => {
                 throw new Error(error.message),
                 console.error("Error in Suggested Users Querry:",error)
             }
-        }
+        },
     })
 
     const { followUser, isPending } = useFollow()

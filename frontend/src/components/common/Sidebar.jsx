@@ -5,10 +5,13 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Sidebar = () => {
+
+    const queryClient = useQueryClient()
     const { mutate:logout, isPending} = useMutation({
         mutationFn: async () => {
             try {
@@ -20,6 +23,9 @@ const Sidebar = () => {
                 console.error("Logout Error:", error)
                 throw error
             }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['authUser']})
         },
         onError: (error) => {
             toast.error(error.message)
@@ -80,7 +86,7 @@ const Sidebar = () => {
                                 <p className='text-white font-bold text-sm w-20 truncate'>{authUser?.fullName}</p>
                                 <p className='text-slate-500 text-sm'>@{authUser?.username}</p>
                             </div>
-                            {isPending ? "O" :
+                            {isPending ? <LoadingSpinner /> :
                                 <BiLogOut className='w-5 h-5 cursor-pointer' onClick={(e) => {
                                     e.preventDefault()
                                     logout()

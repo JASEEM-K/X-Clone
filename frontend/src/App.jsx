@@ -8,6 +8,7 @@ import Sidebar from "./components/common/Sidebar"
 import RightPanel from "./components/common/RightPanel"
 import NotificationPage from "./pages/notification/NotificationPage"
 import ProfilePage from "./pages/Profile/ProfilePage"
+import LoadingSpinner from "./components/common/LoadingSpinner"
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -29,7 +30,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
-        Loading...
+        <LoadingSpinner size={"xl"} />
       </div>
     )
   }
