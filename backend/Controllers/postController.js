@@ -169,6 +169,7 @@ export const deletePost = async (req, res) => {
 export const getAllPosts = async (_, res) => {
     try {
         const posts = await Post.find()
+            .populate('user', '-password')
             .sort({createdAt: -1})
         return res.status(200).json(posts)
     } catch (error) {
