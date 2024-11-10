@@ -54,7 +54,10 @@ const CreatePost = () => {
 			setImg(null);
 			imgRef.current.value = null;
 			toast.success("Post Created Successfully")
-			queryClient.invalidateQueries({queryKey: ['posts']})
+			Promise.all([
+			queryClient.invalidateQueries({queryKey: ['posts']}),
+			queryClient.invalidateQueries({queryKey: ['fullPost']}),
+			])
 		},
 		onError: (error) => {
 			toast.error(error.message)

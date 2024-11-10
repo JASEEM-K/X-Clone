@@ -17,10 +17,8 @@ const Post = ({ post }) => {
 
     const { data:authUser } = useQuery({queryKey: ['authUser']})
 
-	const postOwner = post.user
 	const isLiked = post.likes.includes(authUser._id);
 
-	const isMyPost = post.user._id === authUser._id;
 
 	const formattedDate = "1h";
 
@@ -66,20 +64,8 @@ const Post = ({ post }) => {
 		}
     })
 
-	const { data: getFullPost , isPending:isGettingPost } = useQuery({
-		queryKey: ['fullPost', post._id],
-		queryFn: async () => {
-			try {
-				const res = await fetch(`/api/posts/fullpost/${post._id}`)
-				const data = await res.json()
-				if(!res.ok) throw new Error(data.error || "Something went wrong")
-				return data 
-			} catch (error) {
-				console.error("Error in Getting Full Post:", error)  
-				throw error
-			}
-		}
-	})
+	const postOwner = post.user
+	const isMyPost = postOwner._id === authUser._id;
 
 	const { mutate:likePost ,isPending:isLinkingPost } = useMutation({
 		mutationFn: async(postId) => {
@@ -110,9 +96,24 @@ const Post = ({ post }) => {
 		}
 	})
 
-	if(isGettingPost) {
+	const { data: getFullPost, isPending: isGettingPost } = useQuery({
+		queryKey: ['fullPost', post._id],
+		queryFn: async () => {
+			try {
+				const res = await fetch(`/api/posts/fullpost/${post._id}`)
+				const data = await res.json()
+				if (!res.ok) throw new Error(data.error || "Something went wrong")
+				return data
+			} catch (error) {
+				console.error("Error in Getting Full Post:", error)
+				throw error
+			}
+		}
+	})
+	if (isGettingPost) {
 		return <PostSkeleton />
 	}
+
 
 	return (
 		<>
@@ -175,7 +176,7 @@ const Post = ({ post }) => {
 												<div className='avatar'>
 													<div className='w-8 rounded-full'>
 														<img
-															src={comment.user.profileImg || "/avatar-placeholder.png"}
+															src={comment.user.profileImg || "/src/assets/placeholder.bmp"}
 														/>
 													</div>
 												</div>
