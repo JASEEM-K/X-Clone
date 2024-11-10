@@ -28,7 +28,6 @@ const Posts = ({ feedType, userId }) => {
 				const res = await fetch(PostEndPoint)
 				const data = await res.json()
 				if (!res.ok) throw new Error(data.error || "Something Went Wrong")
-				console.log(data)
 				return data
 			} catch (error) {
 				console.log("Error in Getting Post", error)

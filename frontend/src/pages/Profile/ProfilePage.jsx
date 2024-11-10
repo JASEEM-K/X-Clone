@@ -10,6 +10,10 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
+import FollowButton from "../../components/common/FollowButton";
+import { formatMemberSinceDate } from "../../utils/date";
+import useProfileUpdate from "../../hooks/useProfileUpdate";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const ProfilePage = () => {
 	const [coverImg, setCoverImg] = useState(null);
@@ -21,7 +25,7 @@ const ProfilePage = () => {
     const { username } = useParams();
 
     const { data:user, isLoading, refetch, isRefetching } = useQuery({
-        queryKey: ['user'],
+        queryKey: ['userProfile'],
         queryFn: async () => {
             try {
                 const res = await fetch(`/api/user/profile/${username}`)
@@ -36,6 +40,7 @@ const ProfilePage = () => {
 
     const { data:authUser } = useQuery({ queryKey: ['authUser'] })
 	const isMyProfile = authUser?._id === user?._id
+    const memberSince = formatMemberSinceDate(user?.createdAt)
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
@@ -51,9 +56,11 @@ const ProfilePage = () => {
 
     const { data:posts } = useQuery({queryKey: ['posts']})
 
+    const { updateProfile, isUpdatingProfile } = useProfileUpdate()
+
     useEffect(() => {
         refetch()
-    },[refetch, username])
+    },[refetch, username, authUser])
 
 	return (
 		<>
@@ -89,52 +96,49 @@ const ProfilePage = () => {
 									</div>
 								)}
 
-								<input
-									type='file'
-									hidden
-									ref={coverImgRef}
-									onChange={(e) => handleImgChange(e, "coverImg")}
-								/>
-								<input
-									type='file'
-									hidden
-									ref={profileImgRef}
-									onChange={(e) => handleImgChange(e, "profileImg")}
-								/>
-								{/* USER AVATAR */}
-								<div className='avatar absolute -bottom-16 left-4'>
-									<div className='w-32 rounded-full relative group/avatar'>
-										<img src={profileImg || user?.profileImg || "/src/assets/placeholder.bmp"} />
-										<div className='absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer'>
-											{isMyProfile && (
-												<MdEdit
-													className='w-4 h-4 text-white'
-													onClick={() => profileImgRef.current.click()}
-												/>
-											)}
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className='flex justify-end px-4 mt-5'>
-								{isMyProfile && <EditProfileModal />}
-								{!isMyProfile && (
-									<button
-										className='btn btn-outline rounded-full btn-sm'
-										onClick={() => alert("Followed successfully")}
-									>
-										Follow
-									</button>
-								)}
-								{(coverImg || profileImg) && (
-									<button
-										className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
-										onClick={() => alert("Profile updated successfully")}
-									>
-										Update
-									</button>
-								)}
-							</div>
+                                <input
+                                    type='file'
+                                    hidden
+                                    ref={coverImgRef}
+                                    onChange={(e) => handleImgChange(e, "coverImg")}
+                                />
+                                <input
+                                    type='file'
+                                    hidden
+                                    ref={profileImgRef}
+                                    onChange={(e) => handleImgChange(e, "profileImg")}
+                                />
+                                {/* USER AVATAR */}
+                                <div className='avatar absolute -bottom-16 left-4'>
+                                    <div className='w-32 rounded-full relative group/avatar'>
+                                        <img src={profileImg || user?.profileImg || "/src/assets/placeholder.bmp"} />
+                                        <div className='absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer'>
+                                            {isMyProfile && (
+                                                <MdEdit
+                                                    className='w-4 h-4 text-white'
+                                                    onClick={() => profileImgRef.current.click()}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='flex justify-end px-4 mt-5'>
+                                {isMyProfile && <EditProfileModal />}
+                                {!isMyProfile && <FollowButton userId={user?._id} />}
+                                {(coverImg || profileImg) && (
+                                    <button
+                                        className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
+                                        onClick={async () => {
+                                            await updateProfile({ coverImg, profileImg })
+                                            setCoverImg(null)
+                                            setProfileImg(null)
+                                        }}
+                                    >
+                                        {isUpdatingProfile ? <LoadingSpinner /> : "Update"}
+                                    </button>
+                                )}
+                            </div>
 
 							<div className='flex flex-col gap-4 mt-14 px-4'>
 								<div className='flex flex-col'>
@@ -149,19 +153,19 @@ const ProfilePage = () => {
 											<>
 												<FaLink className='w-3 h-3 text-slate-500' />
 												<a
-													href='https://youtube.com/@asaprogrammer_'
+													href={user?.link}
 													target='_blank'
 													rel='noreferrer'
 													className='text-sm text-blue-500 hover:underline'
 												>
-													youtube.com/@asaprogrammer_
+                                                    {user?.link}
 												</a>
 											</>
 										</div>
 									)}
 									<div className='flex gap-2 items-center'>
 										<IoCalendarOutline className='w-4 h-4 text-slate-500' />
-										<span className='text-sm text-slate-500'>Joined July 2021</span>
+										<span className='text-sm text-slate-500'>{memberSince}</span>
 									</div>
 								</div>
 								<div className='flex gap-2'>

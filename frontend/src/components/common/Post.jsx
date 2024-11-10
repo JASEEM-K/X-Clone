@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import toast from "react-hot-toast";
 import LoadingSpinner from './LoadingSpinner';
 import PostSkeleton from "../Skeleton/PostSkeleton";
+import { formatPostDate } from "../../utils/date";
 
 
 const Post = ({ post }) => {
@@ -19,7 +20,7 @@ const Post = ({ post }) => {
 
 	const isLiked = post.likes.includes(authUser._id);
 
-	const formattedDate = "1h";
+	const formattedDate = formatPostDate(post.createdAt)
 
 	const handleDeletePost = (e) => {
 		e.preventDefault();
