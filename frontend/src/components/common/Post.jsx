@@ -35,7 +35,10 @@ const Post = ({ post }) => {
 		e.preventDefault();
 	};
 
-	const handleLikePost = () => {};
+	const handleLikePost = (e) => {
+		e.preventDefault();
+		likePost(post._id);
+	};
 
 	const queryClient = useQueryClient()
 
@@ -78,6 +81,35 @@ const Post = ({ post }) => {
 		}
 	})
 
+	const { mutate:likePost ,isPending:isLinkingPost } = useMutation({
+		mutationFn: async(postId) => {
+			try {
+				const res = await fetch(`/api/posts/like/${postId}`, {
+					method: "POST",	
+				})
+				const data = await res.json() 
+				if(!res.ok) throw new Error(data.error || "Something went wrong")
+				return data
+			} catch (error) {
+				console.error("Error in Liking ", error)
+				throw error
+			}
+		},
+		onSuccess: (updatedList) => {
+			queryClient.setQueryData(['posts'], (oldData) => {
+				return oldData.map((p) => {
+					if(p._id === post._id) {
+						return {...p, likes: updatedList}
+					}
+					return p
+				})
+			})
+		},
+		onError: (error) => {
+			toast.error(error.message)
+		}
+	})
+
 	if(isGettingPost) {
 		return <PostSkeleton />
 	}
@@ -102,7 +134,7 @@ const Post = ({ post }) => {
 						</span>
 						{isMyPost && (
 							<span className='flex justify-end flex-1'>
-								{isDeleting ? <LoadingSpinner size={"sm"} /> :
+								{isDeleting ? <LoadingSpinner /> :
 								<FaTrash className='cursor-pointer hover:text-red-500' onClick={(e) => handleDeletePost(e)} /> }
 							</span>
 						)}
@@ -186,12 +218,14 @@ const Post = ({ post }) => {
 								<BiRepost className='w-6 h-6  text-slate-500 group-hover:text-green-500' />
 								<span className='text-sm text-slate-500 group-hover:text-green-500'>0</span>
 							</div>
-							<div className='flex gap-1 items-center group cursor-pointer' onClick={handleLikePost}>
-								{!isLiked && (
+							<div className='flex gap-1 items-center group cursor-pointer' onClick={(e) => handleLikePost(e)}>
+								{!isLiked && !isLinkingPost && (
 									<FaRegHeart className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500' />
 								)}
-								{isLiked && <FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />}
-
+								{isLiked && !isLinkingPost && <FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />}
+								{isLinkingPost && (
+									<LoadingSpinner />
+								)}
 								<span
 									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
 										isLiked ? "text-pink-500" : ""
