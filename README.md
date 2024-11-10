@@ -72,22 +72,22 @@ The app should now be running locally. Open your browser and go to http://localh
 
 ## Usage
 
-    Sign Up: Register a new account to start using the app.
-    Log In: Access your account with your credentials.
-    Follow Users: Search for and follow other users to populate your feed.
-    Create Posts: Share text or media content to your followers.
-    Engage: Like and comment on posts to interact with others.
+   - Sign Up: Register a new account to start using the app.
+   - Log In: Access your account with your credentials.
+   - Follow Users: Search for and follow other users to populate your feed.
+   - Create Posts: Share text or media content to your followers.
+   - Engage: Like and comment on posts to interact with others.
 
 ## Some API Endpoints
 
-    User Authentication:
-        POST /api/auth/register: Register a new user
-        POST /api/auth/login: Log in to the app
-    User Profile:
-        GET /api/users/:id: Get user profile by ID
-        PUT /api/users/:id: Update user profile
-    Post Management:
-        POST /api/posts: Create a new post
-        GET /api/posts/:id: Get a post by ID
-        PUT /api/posts/:id/like: Like a post
-        POST /api/posts/:id/comment: Comment on a post
+   - User Authentication:
+       - POST /api/auth/register: Register a new user
+       - POST /api/auth/login: Log in to the app
+   - User Profile:
+       - GET /api/users/:id: Get user profile by ID
+       - PUT /api/users/:id: Update user profile
+   - Post Management:
+       - POST /api/posts: Create a new post
+       - GET /api/posts/:id: Get a post by ID
+       - PUT /api/posts/:id/like: Like a post
+       - POST /api/posts/:id/comment: Comment on a post
