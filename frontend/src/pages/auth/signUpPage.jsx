@@ -7,12 +7,12 @@ import { MdOutlineMail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-const queryClient = new QueryClient();
 
 const SignUpPage = () => {
+	const queryClient = useQueryClient();
 	const [formData, setFormData] = useState({
 		email: "",
 		username: "",

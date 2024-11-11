@@ -5,7 +5,7 @@ import XSvg from "../../components/svgs/x";
 
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const LoginPage = () => {
@@ -23,31 +23,34 @@ const LoginPage = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-  const { mutate: login, isError, isPending, error } = useMutation({
-    mutationFn: async ({ username, password }) => {
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ username, password })
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || "Login Failed")
-        return data
-      } catch (error) {
-        console.error("Login Error:", error)
-        throw error
-      }
-    },
-    onSuccess:() => {
-      toast.success("Login Successfull")
-    },
-    onError:(error) => {
-      toast.error(error.message)
-    }
-  })
+	const quryclient = useQueryClient()
+
+	const { mutate: login, isError, isPending, error } = useMutation({
+		mutationFn: async ({ username, password }) => {
+			try {
+				const res = await fetch('/api/auth/login', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ username, password })
+				})
+				const data = await res.json()
+				if (!res.ok) throw new Error(data.error || "Login Failed")
+				return data
+			} catch (error) {
+				console.error("Login Error:", error)
+				throw error
+			}
+		},
+		onSuccess: () => {
+			toast.success("Login Successfull")
+			quryclient.invalidateQueries({ queryKey: ['authUser'] })
+		},
+		onError: (error) => {
+			toast.error(error.message)
+		}
+	})
 
 	return (
 		<div className='max-w-screen-xl mx-auto flex h-screen'>
