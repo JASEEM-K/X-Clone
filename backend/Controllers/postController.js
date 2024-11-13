@@ -79,13 +79,13 @@ export const savePost = async (req, res) => {
         if (user.saved.includes(postId)) {
             await User.findByIdAndUpdate(req.user._id, { $pull: { saved: postId } })
 
-            const updatedList = user.saved.filter((id) => id.toString() !== postId.toString())
+            const updatedList = false
             return res.status(200).json(updatedList)
         } else if (!user.saved.includes(postId)) {
             user.saved.push(postId)
             user.save()
 
-            const updatedList = user.saved
+            const updatedList = true
             return res.status(200).json(updatedList)
         }
     } catch (error) {

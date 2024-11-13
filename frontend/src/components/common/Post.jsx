@@ -19,6 +19,8 @@ const Post = ({ post }) => {
     const { data:authUser } = useQuery({queryKey: ['authUser']})
 
 	const isLiked = post.likes.includes(authUser._id);
+	const isSaved = authUser.saved.includes(post._id);
+
 
 	const formattedDate = formatPostDate(post.createdAt)
 
@@ -35,6 +37,11 @@ const Post = ({ post }) => {
 	const handleLikePost = (e) => {
 		e.preventDefault();
 		likePost(post._id);
+	};
+
+	const handleSavePost = (e) => {
+		e.preventDefault();
+		savePost(post._id);
 	};
 
 	const queryClient = useQueryClient()
@@ -88,6 +95,30 @@ const Post = ({ post }) => {
 					}
 					return p
 				})
+			})
+		},
+		onError: (error) => {
+			toast.error(error.message)
+		}
+	})
+
+	const { mutate:savePost ,isPending:isSavingPost } = useMutation({
+		mutationFn: async(postId) => {
+			try {
+				const res = await fetch(`/api/posts/save/${postId}`, {
+					method: "POST",	
+				})
+				const data = await res.json() 
+				if(!res.ok) throw new Error(data.error || "Something went wrong")
+				return data
+			} catch (error) {
+				console.error("Error in Liking ", error)
+				throw error
+			}
+		},
+		onSuccess: (updatedList) => {
+			queryClient.refetchQueries([authUser],(oldData) => {
+				return {...oldData, saved: updatedList}
 			})
 		},
 		onError: (error) => {
@@ -261,8 +292,20 @@ const Post = ({ post }) => {
 								</span>
 							</div>
 						</div>
-						<div className='flex w-1/3 justify-end gap-2 items-center'>
-							<FaRegBookmark className='w-4 h-4 text-slate-500 cursor-pointer' />
+						<div className='flex w-1/3 justify-end gap-2 items-center' onClick={(e) => handleSavePost(e)}>
+								{!isSaved && !isSavingPost && (
+									<FaRegBookmark className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-blue-500' />
+								)}
+								{isSaved && !isSavingPost && <FaRegBookmark className='w-4 h-4 cursor-pointer text-blue-500' />}
+								{isSavingPost&& (
+									<LoadingSpinner />
+								)}
+								<span
+									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
+										isSaved ? "text-pink-500" : ""
+									}`}
+								>
+								</span>
 						</div>
 					</div>
 				</div>
