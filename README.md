@@ -89,5 +89,5 @@ The app should now be running locally. Open your browser and go to http://localh
    - Post Management:
        - POST /api/posts: Create a new post
        - GET /api/posts/:id: Get a post by ID
-       - PUT /api/posts/:id/like: Like a post
+       - PUT /api/posts/:id/like: Like a post.
        - POST /api/posts/:id/comment: Comment on a post
