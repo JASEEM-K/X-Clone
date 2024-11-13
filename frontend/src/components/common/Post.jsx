@@ -19,7 +19,7 @@ const Post = ({ post }) => {
     const { data:authUser } = useQuery({queryKey: ['authUser']})
 
 	const isLiked = post.likes.includes(authUser._id);
-	const isSaved = authUser.saved.includes(post._id);
+	let isSaved = authUser.saved.includes(post._id);
 
 
 	const formattedDate = formatPostDate(post.createdAt)
@@ -116,10 +116,8 @@ const Post = ({ post }) => {
 				throw error
 			}
 		},
-		onSuccess: (updatedList) => {
-			queryClient.refetchQueries([authUser],(oldData) => {
-				return {...oldData, saved: updatedList}
-			})
+		onSuccess: () => {
+			queryClient.invalidateQueries('authUser')
 		},
 		onError: (error) => {
 			toast.error(error.message)
@@ -284,9 +282,7 @@ const Post = ({ post }) => {
 									<LoadingSpinner />
 								)}
 								<span
-									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-										isLiked ? "text-pink-500" : ""
-									}`}
+									className={`text-sm text-slate-500 group-hover:text-pink-500 ${isLiked? "text-pink-500" : "" }`}
 								>
 									{post.likes.length}
 								</span>
@@ -300,12 +296,6 @@ const Post = ({ post }) => {
 								{isSavingPost&& (
 									<LoadingSpinner />
 								)}
-								<span
-									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-										isSaved ? "text-pink-500" : ""
-									}`}
-								>
-								</span>
 						</div>
 					</div>
 				</div>
