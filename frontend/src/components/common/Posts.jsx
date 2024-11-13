@@ -15,6 +15,8 @@ const Posts = ({ feedType, userId }) => {
 				return `/api/posts/user/${userId}`
 			case "liked":
 				return `/api/posts/liked/${userId}`
+			case "saved":
+				return `/api/posts/saved/${userId}`
 			default:
 				return '/api/posts/all'
 		}
